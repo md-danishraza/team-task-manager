@@ -33,7 +33,7 @@ function AppInitializer({ children }) {
   useEffect(() => {
     if (data) {
       dispatch(setUser(data));
-    } else if (error?.status === 401) {
+    } else if (error) {
       dispatch(setUser(null));
     }
   }, [data, error, dispatch]);
