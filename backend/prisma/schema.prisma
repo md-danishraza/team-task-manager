@@ -1,0 +1,134 @@
+// backend/prisma/schema.prisma
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./generated/client"
+  previewFeatures = ["driverAdapters", "multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["taskmanager"]
+}
+
+// User model - authentication and global role
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(member) // Global role (admin can see all projects)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  createdProjects Project[]
+  projectMembers  ProjectMember[]
+  assignedTasks   Task[]          @relation("TaskAssignee")
+  createdTasks    Task[]          @relation("TaskCreator")
+  activityLogs    ActivityLog[]
+
+  @@map("users")
+  @@schema("taskmanager")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdBy   String   @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  creator User            @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  members ProjectMember[]
+  tasks   Task[]
+
+  @@map("projects")
+  @@schema("taskmanager")
+}
+
+model ProjectMember {
+  id        String      @id @default(uuid())
+  projectId String      @map("project_id")
+  userId    String      @map("user_id")
+  role      ProjectRole @default(member)
+  joinedAt  DateTime    @default(now()) @map("joined_at")
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+  @@schema("taskmanager")
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus @default(todo)
+  priority    Priority   @default(medium)
+  dueDate     DateTime?  @map("due_date")
+  projectId   String     @map("project_id")
+  assignedTo  String?    @map("assigned_to")
+  createdBy   String     @map("created_by")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee User?   @relation("TaskAssignee", fields: [assignedTo], references: [id])
+  creator  User    @relation("TaskCreator", fields: [createdBy], references: [id])
+
+  @@index([projectId, status])
+  @@map("tasks")
+  @@schema("taskmanager")
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  action    String // "create_project", "assign_task", "update_status", etc.
+  details   Json? // Store additional data like { projectId, taskId, oldStatus, newStatus }
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("activity_logs")
+  @@schema("taskmanager")
+}
+
+enum UserRole {
+  admin
+  member
+
+  @@schema("taskmanager")
+}
+
+enum ProjectRole {
+  admin
+  member
+
+  @@schema("taskmanager")
+}
+
+enum TaskStatus {
+  todo
+  in_progress
+  done
+
+  @@schema("taskmanager")
+}
+
+enum Priority {
+  low
+  medium
+  high
+
+  @@schema("taskmanager")
+}
