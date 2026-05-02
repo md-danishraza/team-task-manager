@@ -3,8 +3,13 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
-import authRoutes from "./routes/authRoutes.js";
 import { swaggerSpec } from "./config/swagger.js";
+
+// routes
+import authRoutes from "./routes/authRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
+import activityRoutes from "./routes/activityRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,8 +30,10 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     explorer: true,
-    customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "Team Task Manager API Documentation",
+    swaggerOptions: {
+      url: "/api-docs.json",
+    },
   })
 );
 
@@ -61,7 +68,7 @@ app.get("/api-docs.json", (req, res) => {
  *                   type: number
  *                   example: 123.45
  */
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),
@@ -71,6 +78,9 @@ app.get("/health", (req, res) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/activities", activityRoutes);
 
 // Root redirect to API docs
 app.get("/", (req, res) => {

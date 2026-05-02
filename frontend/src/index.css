@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+@import "tailwindcss";
+
+/* Define dynamic base variables for Light and Dark modes */
+:root {
+  --bg-color: #E0E5EC;
+  --text-color: #4A5568;
+  --neo-shadow-light: #FFFFFF;
+  --neo-shadow-dark: #A3B1C6;
+  --primary-color: #5B8C5A;
+  --error-color: #E74C3C;
+  --warning-color: #F39C12;
+  --success-color: #27AE60;
+}
+
+.dark {
+
+  --bg-color: #1a1d21;
+  --text-color: #E2E8F0;
+  --neo-shadow-light: #262a30;
+  --neo-shadow-dark: #0f1114;
+  --primary-color: #6C9E6B;
+  --error-color: #E74C3C;
+  --warning-color: #F39C12;
+  --success-color: #2ECC71;
+}
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  /* Custom utility for your major headings and logo */
+  --font-display: "Plus Jakarta Sans", sans-serif;
+
+  /* Map root variables to Tailwind color classes */
+  --color-primary: var(--bg-color);
+  --color-primary-text: var(--text-color);
+  
+  /* Neumorphic Shadows */
+  --shadow-neo-flat: 8px 8px 16px var(--neo-shadow-dark), -8px -8px 16px var(--neo-shadow-light);
+  --shadow-neo-flat-sm: 4px 4px 8px var(--neo-shadow-dark), -4px -4px 8px var(--neo-shadow-light);
+  --shadow-neo-pressed: inset 8px 8px 16px var(--neo-shadow-dark), inset -8px -8px 16px var(--neo-shadow-light);
+  --shadow-neo-pressed-sm: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+  
+  /* Neobrutalist Shadows */
+  --shadow-brutal: 8px 8px 0px 0px rgba(0,0,0,1);
+  --shadow-brutal-sm: 4px 4px 0px 0px rgba(0,0,0,1);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+
+h1,h2,h3,h4,h5{
+  font-family: var(--font-display);
+}
+/* Move your custom classes into the components layer! */
+@layer components {
+  .neo-flat {
+    box-shadow: var(--shadow-neo-flat);
+  }
+
+  .neo-pressed {
+    box-shadow: var(--shadow-neo-pressed);
+  }
+
+  .neo-input {
+    background: var(--bg-color);
+    box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
+    border: none;
+  }
+
+  .neo-card {
+    background: var(--bg-color);
+    box-shadow: var(--shadow-neo-flat);
+    border-radius: 24px;
+    transition: all 0.2s ease;
+  }
+
+  .neo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 12px 12px 24px var(--neo-shadow-dark), -12px -12px 24px var(--neo-shadow-light);
+  }
+
+  .neo-button {
+    background: var(--bg-color);
+    box-shadow: var(--shadow-neo-flat-sm);
+    transition: all 0.1s ease;
+    cursor: pointer;
+  }
+
+  .neo-button:active {
+    box-shadow: var(--shadow-neo-pressed-sm);
+    transform: translateY(1px);
+  }
+}
+
+/* Custom scrollbar & Animations */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  box-shadow: inset 1px 1px 2px var(--neo-shadow-dark), inset -1px -1px 2px var(--neo-shadow-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-color);
+  border-radius: 6px;
+  box-shadow: var(--shadow-neo-flat-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.hover-shake:hover {
+  animation: shake 0.2s ease-in-out 0s 2;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-color);
+  box-shadow: var(--shadow-neo-flat-sm);
+  position: relative;
+}
+
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--primary-color));
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+
+/* toast context */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

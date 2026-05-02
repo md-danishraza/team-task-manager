@@ -151,46 +151,58 @@ const options: swaggerJsdoc.Options = {
           },
         },
 
-        // Task Schemas
         Task: {
           type: "object",
           properties: {
             id: { type: "string", format: "uuid" },
             title: { type: "string" },
-            description: { type: "string" },
+            description: { type: "string", nullable: true },
             status: { type: "string", enum: ["todo", "in_progress", "done"] },
             priority: { type: "string", enum: ["low", "medium", "high"] },
             dueDate: { type: "string", format: "date-time", nullable: true },
             projectId: { type: "string", format: "uuid" },
             assignedTo: { type: "string", format: "uuid", nullable: true },
             createdBy: { type: "string", format: "uuid" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+            project: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+              },
+            },
+            assignee: {
+              type: "object",
+              nullable: true,
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                email: { type: "string", format: "email" },
+              },
+            },
+            creator: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                email: { type: "string", format: "email" },
+              },
+            },
           },
         },
         CreateTaskInput: {
           type: "object",
           required: ["title", "projectId"],
           properties: {
-            title: {
-              type: "string",
-              minLength: 1,
-              maxLength: 200,
-              example: "Design database schema",
-            },
-            description: {
-              type: "string",
-              maxLength: 1000,
-              example: "Create ERD and setup PostgreSQL",
-            },
+            title: { type: "string", minLength: 1, maxLength: 200 },
+            description: { type: "string", maxLength: 1000 },
             priority: {
               type: "string",
               enum: ["low", "medium", "high"],
               default: "medium",
             },
-            dueDate: {
-              type: "string",
-              format: "date-time",
-              example: "2024-12-31T23:59:59Z",
-            },
+            dueDate: { type: "string", format: "date-time" },
             projectId: { type: "string", format: "uuid" },
             assignedTo: { type: "string", format: "uuid", nullable: true },
           },
@@ -251,7 +263,7 @@ const options: swaggerJsdoc.Options = {
       { name: "Dashboard", description: "Dashboard and statistics endpoints" },
     ],
   },
-  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"], // Path to the API docs
+  apis: ["./src/routes/*.ts", "./src/controllers/*.ts", "./src/index.ts"], // Path to the API docs
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
