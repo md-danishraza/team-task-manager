@@ -35,8 +35,10 @@ export function verifyToken(token: string): TokenPayload | null {
 export function getCookieOptions() {
   return {
     httpOnly: true,
+    // MUST be true if sameSite is "none"
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
+    // "none" allows the cookie to be sent across different domains
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: COOKIE_MAX_AGE,
     path: "/",
   };

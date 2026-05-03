@@ -63,8 +63,8 @@ Once the server is running, access interactive API docs:
 
 #### live
 
-- **Swagger UI**: https://team-task-manager-production-a07b.up.railway.app/api-docs
-- **OpenAPI JSON**: https://team-task-manager-production-a07b.up.railway.app/api-docs.json
+- **Swagger UI**: https://team-task-manager-server.onrender.com/api-docs
+- **OpenAPI JSON**: https://team-task-manager-server.onrender.com/api-docs.json
 
 Test with Swagger UI
 Open http://localhost:5000/api-docs
