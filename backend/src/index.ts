@@ -16,6 +16,9 @@ import morgan from "morgan";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Tells Express it is behind Railway's secure proxy
+app.set("trust proxy", 1);
+
 // Middleware
 // Configure Helmet safely for Swagger UI
 app.use(
@@ -112,9 +115,6 @@ app.use(
     res.status(500).json({ error: "Internal server error" });
   }
 );
-
-// Tells Express it is behind Railway's secure proxy
-app.set("trust proxy", 1);
 
 // Start server
 app.listen(PORT as number, "0.0.0.0", () => {
