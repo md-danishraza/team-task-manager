@@ -66,6 +66,8 @@ Once the server is running, access interactive API docs:
 - **Swagger UI**: https://team-task-manager-server.onrender.com/api-docs
 - **OpenAPI JSON**: https://team-task-manager-server.onrender.com/api-docs.json
 
+**railway deoployment was showing DNS error so i used render**
+
 Test with Swagger UI
 Open http://localhost:5000/api-docs
 
