@@ -4,6 +4,7 @@ import { useGetProjectsQuery, useCreateProjectMutation, useDeleteProjectMutation
 import Header from '../components/Layout/Header';
 import { Plus, FolderOpen, Trash2, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 
 export default function Projects() {
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +16,7 @@ export default function Projects() {
   });
   const [createProject, { isLoading: isCreating }] = useCreateProjectMutation();
   const [deleteProject] = useDeleteProjectMutation();
+  const {addToast} = useToast()
 
   const projects = data?.projects || [];
 
@@ -27,9 +29,11 @@ export default function Projects() {
       setShowModal(false);
       setProjectName('');
       setProjectDesc('');
+      addToast("Project created successfully!","success")
       refetch();
     } catch (error) {
       console.error('Failed to create project:', error);
+      addToast("Error in creating project!","error")
     }
   };
 
@@ -37,9 +41,11 @@ export default function Projects() {
     if (confirm('Are you sure you want to delete this project?')) {
       try {
         await deleteProject(id).unwrap();
+        addToast("Project deleted successfully!","success")
         refetch();
       } catch (error) {
         console.error('Failed to delete project:', error);
+        addToast("Error in deleting project!","error")
       }
     }
   };

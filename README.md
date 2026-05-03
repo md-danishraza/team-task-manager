@@ -2,6 +2,10 @@
 
 A production-ready team collaboration platform with role-based access control, project management, and task tracking. Built with modern technologies and best practices.
 
+#### Live
+
+https://team-task-manager-ethara.netlify.app/
+
 ## ✨ Features
 
 - 🔐 **Secure Authentication** - JWT with httpOnly cookies, bcrypt password hashing
@@ -57,6 +61,11 @@ Once the server is running, access interactive API docs:
 - **Swagger UI**: http://localhost:5000/api-docs
 - **OpenAPI JSON**: http://localhost:5000/api-docs.json
 
+#### live
+
+- **Swagger UI**: https://team-task-manager-production-a07b.up.railway.app/api-docs
+- **OpenAPI JSON**: https://team-task-manager-production-a07b.up.railway.app/api-docs.json
+
 Test with Swagger UI
 Open http://localhost:5000/api-docs
 
@@ -79,7 +88,7 @@ Execute and see real responses
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/team-task-manager.git
+git clone https://github.com/md-danishraza/team-task-manager.git
 cd team-task-manager
 ```
 

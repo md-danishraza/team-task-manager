@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
 import { swaggerSpec } from "./config/swagger.js";
@@ -15,6 +16,24 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+// Configure Helmet safely for Swagger UI
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        // Allow inline scripts and styles purely for the Swagger UI interface
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        // Allow Swagger to load its logo and validation badge
+        imgSrc: ["'self'", "data:", "https://validator.swagger.io"],
+        connectSrc: ["'self'"],
+      },
+    },
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -46,27 +65,13 @@ app.get("/api-docs.json", (req, res) => {
 // Health check
 /**
  * @swagger
- * /health:
+ * /api/health:
  *   get:
  *     summary: Check API health status
  *     tags: [Health]
  *     responses:
  *       200:
  *         description: API is healthy
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: ok
- *                 timestamp:
- *                   type: string
- *                   format: date-time
- *                 uptime:
- *                   type: number
- *                   example: 123.45
  */
 app.get("/api/health", (req, res) => {
   res.json({
@@ -106,9 +111,8 @@ app.use(
 );
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📝 Health check: http://localhost:${PORT}/health`);
-  console.log(`🔐 Auth routes: http://localhost:${PORT}/api/auth`);
-  console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
+app.listen(PORT as number, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📝 Health check: /api/health`);
+  console.log(`📚 API Documentation: /api-docs`);
 });

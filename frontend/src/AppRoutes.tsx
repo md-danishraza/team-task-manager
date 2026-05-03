@@ -7,6 +7,7 @@ import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import Tasks from './pages/Tasks';
 import Layout from './components/Layout/Layout';
+import NotFound from './pages/NotFound';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -82,7 +83,11 @@ export default function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+     {/* Root redirect */}
+     <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      
+      {/*Catch-all route for 404 Not Found (Must be at the bottom) */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

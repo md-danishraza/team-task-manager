@@ -150,18 +150,22 @@ export default function ProjectDetail() {
       }).unwrap();
       setShowTaskModal(false);
       setNewTask({ title: '', description: '', priority: 'medium', dueDate: '', assignedTo: '' });
+      addToast("Task created successfully!","success")
       refetchTasks();
     } catch (error) {
       console.error('Failed to create task:', error);
+      addToast("Error in creating task!","error")
     }
   };
   
   const handleStatusChange = async (taskId: string, status: TaskStatus) => {
     try {
       await updateTaskStatus({ id: taskId, status }).unwrap();
+      addToast("Status updated!","success")
       refetchTasks();
     } catch (error) {
       console.error('Failed to update task status:', error);
+      addToast("Error in status update!","error")
     }
   };
   
@@ -169,9 +173,11 @@ export default function ProjectDetail() {
     if (confirm('Are you sure you want to delete this task?')) {
       try {
         await deleteTask(taskId).unwrap();
+        addToast("Task deleted!","success")
         refetchTasks();
       } catch (error) {
         console.error('Failed to delete task:', error);
+        addToast("Error in deleting task!","error")
       }
     }
   };
@@ -186,6 +192,7 @@ export default function ProjectDetail() {
       setMemberEmail('');
       setMemberRole('member');
       refetchMembers();
+      addToast("Member added!","success")
     } catch (error: any) {
       
       addToast(error.data?.error, 'error');
@@ -196,9 +203,11 @@ export default function ProjectDetail() {
     if (confirm(`Remove ${memberName} from this project?`)) {
       try {
         await removeMember({ id: id!, memberId }).unwrap();
+        addToast("Member removed!","success")
         refetchMembers();
       } catch (error) {
         console.error('Failed to remove member:', error);
+        addToast("Error in removing member!","error")
       }
     }
   };
@@ -223,7 +232,7 @@ export default function ProjectDetail() {
   
   return (
     <div className="animate-fade-in">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap gap-4 items-center justify-between">
         <div>
           <Header title={project.name} subtitle={project.description || 'No description provided'} />
         </div>
