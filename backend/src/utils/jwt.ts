@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { User } from "../../prisma/generated/client/index.js";
+import type { CookieOptions } from "express";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN = "7d";
@@ -32,13 +33,14 @@ export function verifyToken(token: string): TokenPayload | null {
   }
 }
 
-export function getCookieOptions() {
+export function getCookieOptions(): CookieOptions {
   return {
     httpOnly: true,
-    // MUST be true if sameSite is "none"
     secure: process.env.NODE_ENV === "production",
-    // "none" allows the cookie to be sent across different domains
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    // Tell TypeScript these are the exact literal types Express expects
+    sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as
+      | "none"
+      | "lax",
     maxAge: COOKIE_MAX_AGE,
     path: "/",
   };
